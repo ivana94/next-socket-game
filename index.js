@@ -30,13 +30,13 @@ let player;
 
 io.on("connection", (socket) => {
 	console.log(`user with socket id of ${socket.id} just connected!`);
-	let userSocketId = socket.id;
 	if (!game.player1) {
 		game.player1 = socket.id;
 	} else {
 		game.player2 = socket.id;
 	}
 	player = "player1";
+	console.log(game);
 	io.sockets.sockets[game[player]].emit("firstNumber", 100);
 	socket.on("number", (currentNumber) => {
 		if ((currentNumber + 1) % 3 === 0) {
@@ -50,6 +50,13 @@ io.on("connection", (socket) => {
 		}
 		player = switchPlayer(player);
 		io.sockets.sockets[game[player]].emit("nextNumber", currentNumber / 3);
+	});
+	socket.on("disconnect", () => {
+		if (game.player1 === socket.id) {
+			game.player1 = "";
+		} else {
+			game.player2 = "";
+		}
 	});
 });
 
