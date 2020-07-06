@@ -21,18 +21,41 @@ nextApp.prepare().then(() => {
 });
 
 let userSocketId;
+const game = {
+	player1: "",
+	player2: "",
+	move: "",
+};
+let player;
 
 io.on("connection", (socket) => {
-	console.log("socket id: ", socket.id);
+	console.log(`user with socket id of ${socket.id} just connected!`);
 	let userSocketId = socket.id;
-	io.sockets.sockets[userSocketId].emit("firstNumber", 100);
+	if (!game.player1) {
+		game.player1 = socket.id;
+	} else {
+		game.player2 = socket.id;
+	}
+	player = "player1";
+	io.sockets.sockets[game[player]].emit("firstNumber", 100);
 	socket.on("number", (currentNumber) => {
 		if ((currentNumber + 1) % 3 === 0) {
 			currentNumber++;
+			game.move = "+";
 		} else if ((currentNumber - 1) % 3 === 0) {
 			currentNumber--;
+			game.move = "-";
+		} else {
+			game.move = "";
 		}
-		console.log("currentNumber: ", currentNumber + 1);
-		io.sockets.sockets[userSocketId].emit("nextNumber", currentNumber / 3);
+		player = switchPlayer(player);
+		io.sockets.sockets[game[player]].emit("nextNumber", currentNumber / 3);
 	});
 });
+
+function switchPlayer(player) {
+	if (player === "player1") {
+		return "player2";
+	}
+	return "player1";
+}
