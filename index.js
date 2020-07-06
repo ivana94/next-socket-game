@@ -11,6 +11,13 @@ const dev = process.env.NODE_END !== "production";
 const nextApp = require("next")({ dev });
 const nextHandler = nextApp.getRequestHandler();
 
+// import helpers
+const {
+	addPlayerToGame,
+	switchPlayer,
+	modifyCurrentNumberToMakeDivisibleByThree,
+} = require("./lib/game");
+
 nextApp.prepare().then(() => {
 	app.get("*", (req, res) => {
 		return nextHandler(req, res);
@@ -28,16 +35,17 @@ let player;
 
 io.on("connection", (socket) => {
 	console.log(`user with socket id of ${socket.id} just connected!`);
-	if (!game.player1) {
-		game.player1 = socket.id;
-	} else {
-		game.player2 = socket.id;
-	}
+
+	// when players connect, add them to "game" object
+	addPlayerToGame(game, socket);
 	player = "player1";
-	console.log(game);
+
+	// when we have two players, let all connected sockets know the game can start
 	if (game.player1 && game.player2) {
-		socket.emit("gameReadyToStart");
+		io.sockets.emit("gameReadyToStart");
 	}
+
+	// runs when a player chooses to start the game
 	socket.on("startGame", () =>
 		io.sockets.sockets[game[player]].emit(
 			"startGame",
@@ -45,22 +53,20 @@ io.on("connection", (socket) => {
 		)
 	);
 
+	// responsible for doing all the calculations (+1, -1, neutral, divide by 3)
 	socket.on("number", (currentNumber) => {
-		if ((currentNumber + 1) % 3 === 0) {
-			currentNumber++;
-			game.move = "+";
-		} else if ((currentNumber - 1) % 3 === 0) {
-			currentNumber--;
-			game.move = "-";
-		} else {
-			game.move = "=";
-		}
+		currentNumber = modifyCurrentNumberToMakeDivisibleByThree(
+			currentNumber,
+			game
+		);
 		player = switchPlayer(player);
 		io.sockets.sockets[game[player]].emit("nextNumber", {
 			currentNumber: currentNumber / 3,
 			move: game.move,
 		});
 	});
+
+	// when a player refreshes/closes tab, remove them from "game" and allow another user to connect
 	socket.on("disconnect", () => {
 		if (game.player1 === socket.id) {
 			game.player1 = "";
@@ -69,10 +75,3 @@ io.on("connection", (socket) => {
 		}
 	});
 });
-
-function switchPlayer(player) {
-	if (player === "player1") {
-		return "player2";
-	}
-	return "player1";
-}
