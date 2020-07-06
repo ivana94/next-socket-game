@@ -5,11 +5,22 @@ import { socket, initSocket } from "./socket";
 initSocket();
 
 export default function Game() {
-	const [currentNumber, move, isWinner, startGame] = useSockets(socket);
+	const [
+		currentNumber,
+		move,
+		isWinner,
+		gameReadyToStart,
+		startGame,
+	] = useSockets(socket);
 
 	return (
 		<div className="game-container">
-			<button onClick={startGame}>start game</button>
+			{gameReadyToStart && (
+				<button onClick={startGame}>start game</button>
+			)}
+			{!gameReadyToStart && !currentNumber && (
+				<h1>waiting for players to connect!</h1>
+			)}
 			<h1>{currentNumber}</h1>
 			<div className="move-container">
 				<h2 className="move">

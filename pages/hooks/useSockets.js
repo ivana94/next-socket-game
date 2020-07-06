@@ -4,6 +4,7 @@ export function useSockets(socket) {
 	const [currentNumber, setCurrentNumber] = useState();
 	const [move, setMove] = useState();
 	const [isWinner, setIsWinner] = useState(false);
+	const [gameReadyToStart, setGameReadyToStart] = useState(false);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -12,6 +13,10 @@ export function useSockets(socket) {
 			}
 		}, 3000);
 	}, [currentNumber]);
+
+	socket.on("gameReadyToStart", () => {
+		setGameReadyToStart(true);
+	});
 
 	socket.on("startGame", (num) => {
 		setCurrentNumber(num);
@@ -27,7 +32,10 @@ export function useSockets(socket) {
 		}
 	});
 
-	const startGame = () => socket.emit("startGame");
+	const startGame = () => {
+		setGameReadyToStart(false);
+		socket.emit("startGame");
+	};
 
-	return [currentNumber, move, isWinner, startGame];
+	return [currentNumber, move, isWinner, gameReadyToStart, startGame];
 }

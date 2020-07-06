@@ -35,16 +35,16 @@ io.on("connection", (socket) => {
 	}
 	player = "player1";
 	console.log(game);
+	if (game.player1 && game.player2) {
+		socket.emit("gameReadyToStart");
+	}
 	socket.on("startGame", () =>
 		io.sockets.sockets[game[player]].emit(
 			"startGame",
 			Math.floor(Math.random() * 100)
 		)
 	);
-	// io.sockets.sockets[game[player]].emit(
-	// 	"startGame",
-	// 	Math.floor(Math.random() * 100)
-	// );
+
 	socket.on("number", (currentNumber) => {
 		if ((currentNumber + 1) % 3 === 0) {
 			currentNumber++;
