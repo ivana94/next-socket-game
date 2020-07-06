@@ -34,7 +34,17 @@ io.on("connection", (socket) => {
 		game.player2 = socket.id;
 	}
 	player = "player1";
-	io.sockets.sockets[game[player]].emit("firstNumber", 100);
+	console.log(game);
+	socket.on("startGame", () =>
+		io.sockets.sockets[game[player]].emit(
+			"startGame",
+			Math.floor(Math.random() * 100)
+		)
+	);
+	// io.sockets.sockets[game[player]].emit(
+	// 	"startGame",
+	// 	Math.floor(Math.random() * 100)
+	// );
 	socket.on("number", (currentNumber) => {
 		if ((currentNumber + 1) % 3 === 0) {
 			currentNumber++;
