@@ -29,6 +29,11 @@ export default function Medium() {
 		<div>
 			<h1>{currentNumber}</h1>
 			{isWinner && <h3>you've won!</h3>}
+			<style jsx>{`
+				h1 {
+					color: blue;
+				}
+			`}</style>
 		</div>
 	);
 }

@@ -36,7 +36,6 @@ io.on("connection", (socket) => {
 		game.player2 = socket.id;
 	}
 	player = "player1";
-	console.log(game);
 	io.sockets.sockets[game[player]].emit("firstNumber", 100);
 	socket.on("number", (currentNumber) => {
 		if ((currentNumber + 1) % 3 === 0) {
