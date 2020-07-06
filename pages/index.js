@@ -3,8 +3,9 @@ import { socket, initSocket } from "./socket";
 
 initSocket();
 
-export default function Medium() {
+export default function Game() {
 	const [currentNumber, setCurrentNumber] = useState();
+	const [move, setMove] = useState();
 	const [isWinner, setIsWinner] = useState(false);
 
 	useEffect(() => {
@@ -19,8 +20,9 @@ export default function Medium() {
 		setCurrentNumber(num);
 	});
 
-	socket.on("nextNumber", (num) => {
+	socket.on("nextNumber", ({ currentNumber: num, move }) => {
 		setCurrentNumber(num);
+		setMove(move);
 		if (num === 1) {
 			return setIsWinner(true);
 		}
@@ -28,6 +30,7 @@ export default function Medium() {
 	return (
 		<div>
 			<h1>{currentNumber}</h1>
+			<h2>{move === "=" ? move : `${move}1`}</h2>
 			{isWinner && <h3>you've won!</h3>}
 			<style jsx>{`
 				h1 {

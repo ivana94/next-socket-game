@@ -6,9 +6,8 @@ let port = process.env.PORT || 3000;
 const server = require("http").Server(app);
 const io = require("socket.io")(server, { origins: "localhost:3000" });
 
-// Next setup
+// Next.js setup
 const dev = process.env.NODE_END !== "production";
-
 const nextApp = require("next")({ dev });
 const nextHandler = nextApp.getRequestHandler();
 
@@ -20,7 +19,6 @@ nextApp.prepare().then(() => {
 	server.listen(port, () => console.log(`listening on ${port}!`));
 });
 
-let userSocketId;
 const game = {
 	player1: "",
 	player2: "",
@@ -45,10 +43,13 @@ io.on("connection", (socket) => {
 			currentNumber--;
 			game.move = "-";
 		} else {
-			game.move = "";
+			game.move = "=";
 		}
 		player = switchPlayer(player);
-		io.sockets.sockets[game[player]].emit("nextNumber", currentNumber / 3);
+		io.sockets.sockets[game[player]].emit("nextNumber", {
+			currentNumber: currentNumber / 3,
+			move: game.move,
+		});
 	});
 	socket.on("disconnect", () => {
 		if (game.player1 === socket.id) {
