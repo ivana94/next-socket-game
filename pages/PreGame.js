@@ -9,14 +9,14 @@ export default function PreGame({
 		<div>
 			{gameReadyToStart && (
 				<React.Fragment>
-					<h1>Click this button to start the game!</h1>
+					<h1>Click this button to start the game.</h1>
 					<div className="button-container">
 						<button onClick={startGame}>start game</button>
 					</div>
 				</React.Fragment>
 			)}
 			{!gameReadyToStart && !currentNumber && (
-				<h1>waiting for players to connect!</h1>
+				<h1>waiting for players to connect.</h1>
 			)}
 			<style jsx>{`
 				.button-container {
