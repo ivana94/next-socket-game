@@ -32,7 +32,6 @@ export function useSockets(socket) {
 	});
 
 	socket.on("nextNumber", ({ currentNumber: num, move }) => {
-		console.log("num: ", num);
 		setCurrentNumber(num);
 		setMove(move);
 		setIsWinner(false);
