@@ -26,10 +26,11 @@ nextApp.prepare().then(() => {
 	server.listen(port, () => console.log(`listening on ${port}!`));
 });
 
-const game = {
+let game = {
 	player1: "",
 	player2: "",
 	move: "",
+	currentNumber: null,
 };
 let player;
 
@@ -37,7 +38,7 @@ io.on("connection", (socket) => {
 	console.log(`user with socket id of ${socket.id} just connected!`);
 
 	// when players connect, add them to "game" object
-	addPlayerToGame(game, socket);
+	game = addPlayerToGame(game, socket);
 	player = "player1";
 
 	// when we have two players, let all connected sockets know the game can start
@@ -58,14 +59,12 @@ io.on("connection", (socket) => {
 
 	// responsible for doing all the calculations (+1, -1, neutral, divide by 3)
 	socket.on("number", (currentNumber) => {
-		currentNumber = modifyCurrentNumberToMakeDivisibleByThree(
-			currentNumber,
-			game
-		);
+		game = modifyCurrentNumberToMakeDivisibleByThree(game, currentNumber);
+		console.log("game: ", game);
 		player = switchPlayer(player);
 		io.sockets.sockets[game[player]].emit("nextNumber", {
-			currentNumber: currentNumber / 3,
-			move: game.move,
+			...game,
+			currentNumber: game.currentNumber / 3,
 		});
 	});
 
