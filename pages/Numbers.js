@@ -9,6 +9,13 @@ export default function Numbers({ currentNumber, move }) {
 					{move === "=" ? move : move ? `${move}1` : ""}
 				</h2>
 			</div>
+			<style jsx>{`
+				.move {
+					border-radius: 50%;
+					background: red;
+					text-align: center;
+				}
+			`}</style>
 		</div>
 	);
 }

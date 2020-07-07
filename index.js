@@ -46,12 +46,15 @@ io.on("connection", (socket) => {
 	}
 
 	// runs when a player chooses to start the game
-	socket.on("startGame", () =>
+	socket.on("startGame", () => {
+		// send message to one player with the random number
 		io.sockets.sockets[game[player]].emit(
 			"startGame",
 			Math.floor(Math.random() * 100)
-		)
-	);
+		);
+		// send message to other player to notify game is starting
+		io.sockets.sockets[game[switchPlayer(player)]].emit("startGame");
+	});
 
 	// responsible for doing all the calculations (+1, -1, neutral, divide by 3)
 	socket.on("number", (currentNumber) => {

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 export function useSockets(socket) {
+	// currentNumber = number to show on screen
 	const [currentNumber, setCurrentNumber] = useState();
+
+	// move = did we +1, -1, or +0  the previous number/3?
 	const [move, setMove] = useState();
 	const [isWinner, setIsWinner] = useState(false);
+
+	// gameReadyToStart = boolean to indicate
 	const [gameReadyToStart, setGameReadyToStart] = useState(false);
 
 	useEffect(() => {
@@ -19,8 +24,11 @@ export function useSockets(socket) {
 	});
 
 	socket.on("startGame", (num) => {
-		setCurrentNumber(num);
+		setGameReadyToStart(false);
 		setIsWinner(false);
+		if (num) {
+			setCurrentNumber(num);
+		}
 	});
 
 	socket.on("nextNumber", ({ currentNumber: num, move }) => {
@@ -33,7 +41,6 @@ export function useSockets(socket) {
 	});
 
 	const startGame = () => {
-		setGameReadyToStart(false);
 		socket.emit("startGame");
 	};
 

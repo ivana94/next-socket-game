@@ -23,7 +23,7 @@ export default function Main() {
 	] = useSockets(socket);
 
 	return (
-		<div className="game-container">
+		<React.Fragment>
 			<PreGame
 				gameReadyToStart={gameReadyToStart}
 				startGame={startGame}
@@ -47,7 +47,13 @@ export default function Main() {
 					justify-content: center;
 					align-items: center;
 				}
+
+				h1 {
+					font-size: 3rem;
+					font-family: "Helvetica Neue", Arial, sans-serif;
+					font-weight: bold;
+				}
 			`}</style>
-		</div>
+		</React.Fragment>
 	);
 }
