@@ -4,7 +4,9 @@ let port = process.env.PORT || 3000;
 
 // socket setup
 const server = require("http").Server(app);
-const io = require("socket.io")(server, { origins: "localhost:3000" });
+const io = require("socket.io")(server, {
+	origins: "localhost:3000 || https://matijevic-got.herokuapp.com/*",
+});
 
 // Next.js setup
 const dev = process.env.NODE_END !== "production";
