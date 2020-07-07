@@ -41,6 +41,10 @@ io.on("connection", (socket) => {
 	game = addPlayerToGame(game, socket);
 	player = "player1";
 
+	if (game.player1 === socket.id) {
+		socket.emit("player1");
+	}
+
 	// when we have two players, let all connected sockets know the game can start
 	if (game.player1 && game.player2) {
 		io.sockets.emit("gameReadyToStart");

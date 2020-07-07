@@ -1,15 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import GameConfiguration from "./GameConfiguration";
 
 export default function PreGame({
 	gameReadyToStart,
 	startGame,
 	currentNumber,
+	isPlayer1,
+	handleChangeGameConfiguration,
 }) {
+	const [toggleGameConfiguration, setToggleGameConfiguration] = useState(
+		false
+	);
 	return (
 		<div>
+			{toggleGameConfiguration && isPlayer1 && (
+				<GameConfiguration
+					handleChangeGameConfiguration={
+						handleChangeGameConfiguration
+					}
+					setToggleGameConfiguration={setToggleGameConfiguration}
+					toggleGameConfiguration={toggleGameConfiguration}
+				/>
+			)}
+			{isPlayer1 && (
+				<p
+					onClick={() =>
+						setToggleGameConfiguration(!toggleGameConfiguration)
+					}
+				>
+					would you like to set the speed of the game? (beta)
+				</p>
+			)}
 			{gameReadyToStart && (
 				<React.Fragment>
-					<h1>Click this button to start the game.</h1>
+					<h1>Click to start.</h1>
 					<div className="button-container">
 						<button onClick={startGame}>start game</button>
 					</div>
@@ -23,22 +47,9 @@ export default function PreGame({
 					text-align: center;
 				}
 
-				button {
-					font-size: 1.5rem;
-					color: black;
-					text-transform: uppercase;
-					background: #fff;
-					padding: 30px 20px;
-					border: 4px solid black;
-					transition: all 1s ease;
-				}
-
-				button:hover {
-					color: #ffffff;
-					background: goldenrod;
-					border-color: goldenrod;
-					transition: all 1s ease;
-					cursor: pointer;
+				p {
+					font-size: 1.2rem;
+					font-family: sans-serif;
 				}
 			`}</style>
 		</div>

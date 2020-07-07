@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PreGame from "./PreGame";
 import Numbers from "./Numbers";
 import { useSockets } from "./hooks/useSockets";
+import { useStatefulFields } from "./hooks/useStatefulFields";
 import { socket, initSocket } from "./socket";
 
 initSocket();
@@ -15,23 +16,36 @@ initSocket();
 
 export default function Main() {
 	const [
+		gameConfiguration,
+		handleChangeGameConfiguration,
+	] = useStatefulFields();
+	const [
 		currentNumber,
 		move,
 		isWinner,
 		gameReadyToStart,
 		startGame,
-	] = useSockets(socket);
+		gameStarted,
+		isPlayer1,
+	] = useSockets(socket, gameConfiguration.timer);
 
 	return (
 		<React.Fragment>
-			<PreGame
-				gameReadyToStart={gameReadyToStart}
-				startGame={startGame}
-				currentNumber={currentNumber}
-			/>
+			{!gameStarted && (
+				<PreGame
+					gameReadyToStart={gameReadyToStart}
+					startGame={startGame}
+					currentNumber={currentNumber}
+					isPlayer1={isPlayer1}
+					gameConfiguration={gameConfiguration}
+					handleChangeGameConfiguration={
+						handleChangeGameConfiguration
+					}
+				/>
+			)}
 
 			<Numbers currentNumber={currentNumber} move={move} />
-			{isWinner && <h3>you've won!</h3>}
+			{isWinner && <h1>you've won!</h1>}
 
 			<style jsx global>{`
 				body {
@@ -52,6 +66,24 @@ export default function Main() {
 					font-size: 3rem;
 					font-family: "Helvetica Neue", Arial, sans-serif;
 					font-weight: bold;
+				}
+
+				button {
+					font-size: 1.5rem;
+					color: black;
+					text-transform: uppercase;
+					background: #fff;
+					padding: 30px 20px;
+					border: 4px solid black;
+					transition: all 1s ease;
+				}
+
+				button:hover {
+					color: #ffffff;
+					background: goldenrod;
+					border-color: goldenrod;
+					transition: all 1s ease;
+					cursor: pointer;
 				}
 			`}</style>
 		</React.Fragment>
