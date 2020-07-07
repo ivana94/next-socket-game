@@ -31,6 +31,9 @@ export default function Main() {
 
 	return (
 		<React.Fragment>
+			<div className="title-container">
+				<h1 className="title">game of three.</h1>
+			</div>
 			{!gameStarted && (
 				<PreGame
 					gameReadyToStart={gameReadyToStart}
@@ -45,7 +48,7 @@ export default function Main() {
 			)}
 
 			<Numbers currentNumber={currentNumber} move={move} />
-			{isWinner && <h1>you've won!</h1>}
+			{isWinner && <h3>you've won!</h3>}
 
 			<style jsx global>{`
 				body {
@@ -57,7 +60,6 @@ export default function Main() {
 
 				body > div {
 					height: 100vh;
-					display: flex;
 					justify-content: center;
 					align-items: center;
 				}
@@ -66,6 +68,24 @@ export default function Main() {
 					font-size: 3rem;
 					font-family: "Helvetica Neue", Arial, sans-serif;
 					font-weight: bold;
+				}
+
+				h2 {
+					font-size: 2.5rem;
+					font-family: sans-serif;
+				}
+
+				h3 {
+					font-size: 1.8rem;
+					font-family: sans-serif;
+				}
+
+				.title-container {
+					width: 90vw;
+					border-bottom: 1px solid black;
+				}
+
+				.title {
 				}
 
 				button {
