@@ -64,7 +64,6 @@ io.on("connection", (socket) => {
 	// responsible for doing all the calculations (+1, -1, neutral, divide by 3)
 	socket.on("number", (currentNumber) => {
 		game = modifyCurrentNumberToMakeDivisibleByThree(game, currentNumber);
-		console.log("game: ", game);
 		player = switchPlayer(player);
 		io.sockets.sockets[game[player]].emit("nextNumber", {
 			...game,

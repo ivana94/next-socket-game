@@ -85,9 +85,6 @@ export default function Main() {
 					border-bottom: 1px solid black;
 				}
 
-				.title {
-				}
-
 				button {
 					font-size: 1.5rem;
 					color: black;
