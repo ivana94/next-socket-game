@@ -48,7 +48,7 @@ export default function Main() {
 			)}
 
 			<Numbers currentNumber={currentNumber} move={move} />
-			{isWinner && <h3>you've won!</h3>}
+			{isWinner && <h3 className="winner">you've won 🎉</h3>}
 
 			<style jsx global>{`
 				body {
@@ -59,9 +59,7 @@ export default function Main() {
 				}
 
 				body > div {
-					height: 100vh;
-					justify-content: center;
-					align-items: center;
+					height: 100%;
 				}
 
 				h1 {
@@ -101,6 +99,12 @@ export default function Main() {
 					border-color: goldenrod;
 					transition: all 1s ease;
 					cursor: pointer;
+				}
+
+				.winner {
+					position: absolute;
+					left: 50%;
+					transform: translateX(-50%);
 				}
 			`}</style>
 		</React.Fragment>
